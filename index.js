@@ -40,5 +40,17 @@ app.post("/admin", async (req, res) => {
   res.json({ message: "Quiz stored successfully" });
 });
 
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = await db.collection("users").findOne({ username, password });
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid username or password" });
+  }
+
+  res.json({ message: "Login successful", user });
+});
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
