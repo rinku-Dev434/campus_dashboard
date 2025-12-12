@@ -40,6 +40,11 @@ app.post("/admin", async (req, res) => {
   res.json({ message: "Quiz stored successfully" });
 });
 
+app.get("/tests", async (req, res) => {
+  const tests = await db.collection("tests").find().toArray();
+  res.json(tests);
+});
+
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
