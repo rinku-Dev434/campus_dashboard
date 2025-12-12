@@ -36,6 +36,22 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
+app.post("/update-points", async (req, res) => {
+  const { username, points } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ message: "Username missing" });
+  }
+
+  await db.collection("users").updateOne(
+    { username },
+    { $inc: { points: points } }  // add points to existing score
+  );
+
+  res.json({ message: "Points updated" });
+});
+
+
 
 app.post("/admin", async (req, res) => {
   const quizData = req.body;
