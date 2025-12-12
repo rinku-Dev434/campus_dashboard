@@ -31,6 +31,11 @@ app.post("/user", async (req, res) => {
 
   res.json({ message: "User stored successfully" });
 });
+app.get("/users", async (req, res) => {
+  const users = await db.collection("users").find().toArray();
+  res.json(users);
+});
+
 
 app.post("/admin", async (req, res) => {
   const quizData = req.body;
