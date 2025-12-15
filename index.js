@@ -90,10 +90,30 @@ app.post("/admin", async (req, res) => {
   res.json({ message: "Quiz stored successfully" });
 });
 
-app.get("/tests", async (req, res) => {
-  const tests = await db.collection("tests").find().toArray();
-  res.json(tests);
+const { ObjectId } = require("mongodb");
+
+app.get("/tests/:id", async (req, res) => {
+  try {
+    const testId = req.params.id;
+
+    if (!ObjectId.isValid(testId)) {
+      return res.status(400).json({ message: "Invalid test ID" });
+    }
+
+    const test = await db
+      .collection("tests")
+      .findOne({ _id: new ObjectId(testId) });
+
+    if (!test) {
+      return res.status(404).json({ message: "Test not found" });
+    }
+
+    res.json(test);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
