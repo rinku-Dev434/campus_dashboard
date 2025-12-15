@@ -91,6 +91,10 @@ app.post("/admin", async (req, res) => {
 });
 
 const { ObjectId } = require("mongodb");
+app.get("/tests", async (req, res) => {
+  const tests = await db.collection("tests").find().toArray();
+  res.json(tests);
+});
 
 app.get("/tests/:id", async (req, res) => {
   try {
