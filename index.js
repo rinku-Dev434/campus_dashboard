@@ -35,16 +35,11 @@ app.get("/users", async (req, res) => {
   const users = await db.collection("users").find().toArray();
   res.json(users);
 });
-app.post("/questionform", async (req, res) => {
-  const {
-    id,
-    title,
-    company,
-    description,
-    questionset
-  } = req.body;
 
-  if (!id || !title || !questionset || questionset.length === 0) {
+app.post("/questionform", async (req, res) => {
+  const { id, title, company, description, questionset } = req.body;
+
+  if (!id || !title || !Array.isArray(questionset) || questionset.length === 0) {
     return res.status(400).json({ message: "Invalid exam data" });
   }
 
@@ -54,15 +49,15 @@ app.post("/questionform", async (req, res) => {
     company,
     description,
     numberofquestions: questionset.length,
-    type: "mcq",
     questionset,
-    admincode: ""
+    createdAt: new Date()
   };
 
   await db.collection("tests").insertOne(exam);
 
   res.json({ message: "Exam stored successfully" });
 });
+
 
 
 app.post("/update-points", async (req, res) => {
